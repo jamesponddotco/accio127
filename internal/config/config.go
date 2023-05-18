@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"git.sr.ht/~jamesponddotco/accio127/internal/jsonutil"
 	"git.sr.ht/~jamesponddotco/xstd-go/xerrors"
 )
 
@@ -44,13 +45,13 @@ const (
 	DefaultMinTLSVersion string = "TLS13"
 
 	// DefaultReadTimeout is the default read timeout for the server.
-	DefaultReadTimeout time.Duration = 5 * time.Second
+	DefaultReadTimeout jsonutil.Duration = jsonutil.Duration(5 * time.Second)
 
 	// DefaultWriteTimeout is the default write timeout for the server.
-	DefaultWriteTimeout time.Duration = 10 * time.Second
+	DefaultWriteTimeout jsonutil.Duration = jsonutil.Duration(10 * time.Second)
 
 	// DefaultIdleTimeout is the default idle timeout for the server.
-	DefaultIdleTimeout time.Duration = 60 * time.Second
+	DefaultIdleTimeout jsonutil.Duration = jsonutil.Duration(60 * time.Second)
 )
 
 // Config holds shared configuration values for the application.
@@ -77,13 +78,13 @@ type Config struct {
 	PrivacyPolicy string `json:"privacyPolicy"`
 
 	// ReadTimeout is the read timeout for the server.
-	ReadTimeout time.Duration `json:"readTimeout"`
+	ReadTimeout jsonutil.Duration `json:"readTimeout"`
 
 	// WriteTimeout is the write timeout for the server.
-	WriteTimeout time.Duration `json:"writeTimeout"`
+	WriteTimeout jsonutil.Duration `json:"writeTimeout"`
 
 	// IdleTimeout is the idle timeout for the server.
-	IdleTimeout time.Duration `json:"idleTimeout"`
+	IdleTimeout jsonutil.Duration `json:"idleTimeout"`
 }
 
 // LoadConfig loads the configuration from a file.

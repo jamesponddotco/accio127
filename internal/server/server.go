@@ -73,9 +73,9 @@ func New(cfg *config.Config, db *database.DB, logger *zap.Logger) (*Server, erro
 		Addr:         cfg.Address,
 		Handler:      mux,
 		TLSConfig:    tlsConfig,
-		ReadTimeout:  cfg.ReadTimeout,
-		WriteTimeout: cfg.WriteTimeout,
-		IdleTimeout:  cfg.IdleTimeout,
+		ReadTimeout:  time.Duration(cfg.ReadTimeout),
+		WriteTimeout: time.Duration(cfg.WriteTimeout),
+		IdleTimeout:  time.Duration(cfg.IdleTimeout),
 	}
 
 	return &Server{
