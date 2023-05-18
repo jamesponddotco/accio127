@@ -6,6 +6,7 @@ import (
 
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
+	"github.com/julienschmidt/httprouter"
 	"go.uber.org/zap"
 )
 
@@ -24,7 +25,7 @@ func NewMetricsHandler(db *database.DB, logger *zap.Logger) *MetricsHandler {
 }
 
 // ServeHTTP serves the /metrics endpoint.
-func (h *MetricsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *MetricsHandler) Handle(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
 	var (
 		count   = h.db.Count()
 		counter = model.NewCounter(count)

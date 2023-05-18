@@ -7,6 +7,7 @@ import (
 
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
+	"github.com/julienschmidt/httprouter"
 	"go.uber.org/zap"
 )
 
@@ -25,7 +26,7 @@ func NewAnonymizedIPHandler(db *database.DB, logger *zap.Logger) *AnonymizedIPHa
 }
 
 // ServeHTTP serves the /ip/anonymized endpoint.
-func (h *AnonymizedIPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *AnonymizedIPHandler) Handle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	ip, err := ClientIP(r)
 	if err != nil {
 		h.logger.Error("Failed to get client IP address", zap.Error(err))

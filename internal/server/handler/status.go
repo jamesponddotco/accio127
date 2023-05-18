@@ -6,6 +6,7 @@ import (
 
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
+	"github.com/julienschmidt/httprouter"
 	"go.uber.org/zap"
 )
 
@@ -32,7 +33,7 @@ func NewStatusHandler(db *database.DB, logger *zap.Logger) *StatusHandler {
 }
 
 // ServeHTTP serves the /status endpoint.
-func (h *StatusHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *StatusHandler) Handle(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
 	const serverStatus = Online
 
 	databaseStatus := Online

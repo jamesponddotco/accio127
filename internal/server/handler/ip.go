@@ -9,6 +9,7 @@ import (
 
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
+	"github.com/julienschmidt/httprouter"
 	"go.uber.org/zap"
 )
 
@@ -27,7 +28,7 @@ func NewIPHandler(db *database.DB, logger *zap.Logger) *IPHandler {
 }
 
 // ServeHTTP serves the /ip endpoint.
-func (h *IPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *IPHandler) Handle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	ip, err := ClientIP(r)
 	if err != nil {
 		h.logger.Error("Failed to get client IP address", zap.Error(err))

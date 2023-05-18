@@ -1,17 +1,20 @@
 package middleware
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/julienschmidt/httprouter"
+)
 
 // AcceptRequests returns a 405 Method Not Allowed if the request method is not
 // GET, HEAD, or OPTIONS.
-func AcceptRequests(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func AcceptRequests(next httprouter.Handle) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		if r.Method != "GET" && r.Method != "HEAD" && r.Method != "OPTIONS" {
 			http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-
 			return
 		}
 
-		next.ServeHTTP(w, r)
-	})
+		next(w, r, ps)
+	}
 }
