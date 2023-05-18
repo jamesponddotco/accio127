@@ -39,6 +39,10 @@ const (
 	// DefaultDSN is the default data source name for the SQLite database.
 	DefaultDSN string = "file:/var/share/accio127/sqlite.db?cache=shared&mode=rwc&_pragma_cache_size=-20000&_journal_mode=WAL&_synchronous=NORMAL"
 
+	// DefaultMinTLSVersion is the default minimum TLS version supported by the
+	// server.
+	DefaultMinTLSVersion string = "TLS13"
+
 	// DefaultReadTimeout is the default read timeout for the server.
 	DefaultReadTimeout time.Duration = 5 * time.Second
 
@@ -65,6 +69,9 @@ type Config struct {
 
 	// CertKey is the path to the certificate key file.
 	CertKey string `json:"certKey"`
+
+	// MinTLSVersion is the minimum TLS version supported by the server.
+	MinTLSVersion string `json:"minTLSVersion"`
 
 	// PrivacyPolicy is the link to the service's privacy policy.
 	PrivacyPolicy string `json:"privacyPolicy"`
@@ -123,6 +130,10 @@ func LoadConfig(path string) (*Config, error) {
 
 	if cfg.DSN == "" {
 		cfg.DSN = DefaultDSN
+	}
+
+	if cfg.MinTLSVersion != "TLS12" && cfg.MinTLSVersion != "TLS13" {
+		cfg.MinTLSVersion = DefaultMinTLSVersion
 	}
 
 	return cfg, nil

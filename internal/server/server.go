@@ -33,7 +33,16 @@ func New(cfg *config.Config, db *database.DB, logger *zap.Logger) (*Server, erro
 		return nil, fmt.Errorf("failed to load TLS certificate: %w", err)
 	}
 
-	tlsConfig := xtls.DefaultServerConfig()
+	var tlsConfig *tls.Config
+
+	if cfg.MinTLSVersion == "TLS13" {
+		tlsConfig = xtls.ModernServerConfig()
+	}
+
+	if cfg.MinTLSVersion == "TLS12" {
+		tlsConfig = xtls.IntermediateServerConfig()
+	}
+
 	tlsConfig.Certificates = []tls.Certificate{cert}
 
 	middlewares := []func(httprouter.Handle) httprouter.Handle{
