@@ -1,0 +1,12 @@
+{
+  "address": ":1997",
+  "pid": "/var/run/accio127.pid",
+  "dsn": "file:/var/lib/accio127/sqlite.db?cache=shared&mode=rwc&_pragma_cache_size=-20000&_journal_mode=WAL&_synchronous=NORMAL",
+  "certFile": "/etc/nginx/ssl/example.com/cert.pem",
+  "certKey": "/etc/nginx/ssl/example.com/key.pem",
+  "minTLSVersion": "TLS13",
+  "privacyPolicy": "https://example.com/privacy-policy",
+  "readTimeout": "5s",
+  "writeTimeout": "10s",
+  "idleTimeout": "60s"
+}
