@@ -1,0 +1,4 @@
+{
+  "certFile": "/etc/nginx/ssl/example.com/cert.pem",
+  "certKey": "/etc/nginx/ssl/example.com/key.pem",
+}
