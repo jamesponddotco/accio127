@@ -2,6 +2,7 @@
 # when working on this project.
 .env
 .tmp
+config/
 cover.out
 
 # https://i.cpimg.sh/r6BsGDijfFyl.png
