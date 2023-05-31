@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
+	"git.sr.ht/~jamesponddotco/accio127/internal/errors"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
 	"github.com/julienschmidt/httprouter"
 	"go.uber.org/zap"
@@ -51,7 +52,10 @@ func (h *StatusHandler) Handle(w http.ResponseWriter, _ *http.Request, _ httprou
 	if err != nil {
 		h.logger.Error("Failed to marshal status to JSON", zap.Error(err))
 
-		w.WriteHeader(http.StatusInternalServerError)
+		errors.JSON(w, h.logger, errors.ErrorResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "Failed to marshal status to JSON.",
+		})
 
 		return
 	}
@@ -62,7 +66,10 @@ func (h *StatusHandler) Handle(w http.ResponseWriter, _ *http.Request, _ httprou
 	if err != nil {
 		h.logger.Error("Failed to write status JSON to response", zap.Error(err))
 
-		w.WriteHeader(http.StatusInternalServerError)
+		errors.JSON(w, h.logger, errors.ErrorResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "Failed to write status JSON to response.",
+		})
 
 		return
 	}

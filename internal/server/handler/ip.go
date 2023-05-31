@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
+	"git.sr.ht/~jamesponddotco/accio127/internal/errors"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
 	"github.com/julienschmidt/httprouter"
 	"go.uber.org/zap"
@@ -33,7 +34,10 @@ func (h *IPHandler) Handle(w http.ResponseWriter, r *http.Request, _ httprouter.
 	if err != nil {
 		h.logger.Error("Failed to get client IP address", zap.Error(err))
 
-		w.WriteHeader(http.StatusInternalServerError)
+		errors.JSON(w, h.logger, errors.ErrorResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "Failed to get IP address. Please try again later.",
+		})
 
 		return
 	}
@@ -49,7 +53,10 @@ func (h *IPHandler) Handle(w http.ResponseWriter, r *http.Request, _ httprouter.
 		if err != nil {
 			h.logger.Error("Failed to marshal IP address to JSON", zap.Error(err))
 
-			w.WriteHeader(http.StatusInternalServerError)
+			errors.JSON(w, h.logger, errors.ErrorResponse{
+				Code:    http.StatusInternalServerError,
+				Message: "Failed to marshal IP address to JSON. Please try again later.",
+			})
 
 			return
 		}
@@ -58,7 +65,10 @@ func (h *IPHandler) Handle(w http.ResponseWriter, r *http.Request, _ httprouter.
 		if err != nil {
 			h.logger.Error("Failed to write IP address JSON to response", zap.Error(err))
 
-			w.WriteHeader(http.StatusInternalServerError)
+			errors.JSON(w, h.logger, errors.ErrorResponse{
+				Code:    http.StatusInternalServerError,
+				Message: "Failed to write IP address JSON to response. Please try again later.",
+			})
 
 			return
 		}
@@ -69,7 +79,10 @@ func (h *IPHandler) Handle(w http.ResponseWriter, r *http.Request, _ httprouter.
 		if err != nil {
 			h.logger.Error("Failed to write IP address to response", zap.Error(err))
 
-			w.WriteHeader(http.StatusInternalServerError)
+			errors.JSON(w, h.logger, errors.ErrorResponse{
+				Code:    http.StatusInternalServerError,
+				Message: "Failed to write IP address to response. Please try again later.",
+			})
 
 			return
 		}

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
+	"git.sr.ht/~jamesponddotco/accio127/internal/errors"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
 	"github.com/julienschmidt/httprouter"
 	"go.uber.org/zap"
@@ -35,7 +36,10 @@ func (h *MetricsHandler) Handle(w http.ResponseWriter, _ *http.Request, _ httpro
 	if err != nil {
 		h.logger.Error("Failed to marshal access counter to JSON", zap.Error(err))
 
-		w.WriteHeader(http.StatusInternalServerError)
+		errors.JSON(w, h.logger, errors.ErrorResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "Failed to marshal access counter to JSON.",
+		})
 
 		return
 	}
@@ -46,7 +50,10 @@ func (h *MetricsHandler) Handle(w http.ResponseWriter, _ *http.Request, _ httpro
 	if err != nil {
 		h.logger.Error("Failed to write access counter JSON to response", zap.Error(err))
 
-		w.WriteHeader(http.StatusInternalServerError)
+		errors.JSON(w, h.logger, errors.ErrorResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "Failed to write access counter JSON to response.",
+		})
 
 		return
 	}
