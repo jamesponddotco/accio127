@@ -15,6 +15,7 @@ import (
 	"git.sr.ht/~jamesponddotco/accio127/internal/config"
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
 	"git.sr.ht/~jamesponddotco/accio127/internal/endpoint"
+	apierror "git.sr.ht/~jamesponddotco/accio127/internal/errors"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/handler"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/middleware"
 	"git.sr.ht/~jamesponddotco/xstd-go/xcrypto/xtls"
@@ -63,6 +64,13 @@ func New(cfg *config.Config, db *database.DB, logger *zap.Logger) (*Server, erro
 	)
 
 	mux := httprouter.New()
+	mux.NotFound = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		apierror.JSON(w, logger, apierror.ErrorResponse{
+			Code:    http.StatusNotFound,
+			Message: "Page not found. Check the URL and try again.",
+		})
+	})
+
 	mux.GET(endpoint.IP, middleware.Chain(ipHandler.Handle, middlewares...))
 	mux.GET(endpoint.IPAnonymize, middleware.Chain(anonymizedIPHandler.Handle, middlewares...))
 	mux.GET(endpoint.IPHashed, middleware.Chain(hashedIPHandler.Handle, middlewares...))
