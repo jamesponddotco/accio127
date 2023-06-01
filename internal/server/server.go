@@ -48,8 +48,8 @@ func New(cfg *config.Config, db *database.DB, logger *zap.Logger) (*Server, erro
 
 	middlewares := []func(httprouter.Handle) httprouter.Handle{
 		func(h httprouter.Handle) httprouter.Handle { return middleware.PanicRecovery(logger, h) },
-		middleware.UserAgent,
-		middleware.AcceptRequests,
+		func(h httprouter.Handle) httprouter.Handle { return middleware.UserAgent(logger, h) },
+		func(h httprouter.Handle) httprouter.Handle { return middleware.AcceptRequests(logger, h) },
 		func(h httprouter.Handle) httprouter.Handle { return middleware.PrivacyPolicy(cfg.PrivacyPolicy, h) },
 		middleware.SecureHeader,
 		middleware.CORS,
