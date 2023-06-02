@@ -5,6 +5,7 @@ import (
 	"net"
 	"net/http"
 
+	"git.sr.ht/~jamesponddotco/accio127/internal/config"
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
 	"git.sr.ht/~jamesponddotco/accio127/internal/errors"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
@@ -14,13 +15,15 @@ import (
 
 // AnonymizedIPHandler is an HTTP handler for the /ip/anonymized endpoint.
 type AnonymizedIPHandler struct {
+	cfg    *config.Config
 	db     *database.DB
 	logger *zap.Logger
 }
 
 // NewAnonymizedIPHandler creates a new AnonymizedIPHandler instance.
-func NewAnonymizedIPHandler(db *database.DB, logger *zap.Logger) *AnonymizedIPHandler {
+func NewAnonymizedIPHandler(cfg *config.Config, db *database.DB, logger *zap.Logger) *AnonymizedIPHandler {
 	return &AnonymizedIPHandler{
+		cfg:    cfg,
 		db:     db,
 		logger: logger,
 	}
@@ -28,7 +31,7 @@ func NewAnonymizedIPHandler(db *database.DB, logger *zap.Logger) *AnonymizedIPHa
 
 // ServeHTTP serves the /ip/anonymized endpoint.
 func (h *AnonymizedIPHandler) Handle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	ip, err := ClientIP(r)
+	ip, err := ClientIP(r, h.cfg.Proxy)
 	if err != nil {
 		h.logger.Error("Failed to get client IP address", zap.Error(err))
 

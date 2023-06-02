@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"git.sr.ht/~jamesponddotco/accio127/internal/config"
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
 	"git.sr.ht/~jamesponddotco/accio127/internal/errors"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
@@ -16,13 +17,15 @@ import (
 
 // IPHandler is an HTTP handler for the /ip endpoint.
 type IPHandler struct {
+	cfg    *config.Config
 	db     *database.DB
 	logger *zap.Logger
 }
 
 // NewIPHandler creates a new IPHandler instance.
-func NewIPHandler(db *database.DB, logger *zap.Logger) *IPHandler {
+func NewIPHandler(cfg *config.Config, db *database.DB, logger *zap.Logger) *IPHandler {
 	return &IPHandler{
+		cfg:    cfg,
 		db:     db,
 		logger: logger,
 	}
@@ -30,7 +33,7 @@ func NewIPHandler(db *database.DB, logger *zap.Logger) *IPHandler {
 
 // ServeHTTP serves the /ip endpoint.
 func (h *IPHandler) Handle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	ip, err := ClientIP(r)
+	ip, err := ClientIP(r, h.cfg.Proxy)
 	if err != nil {
 		h.logger.Error("Failed to get client IP address", zap.Error(err))
 
@@ -97,7 +100,7 @@ func (h *IPHandler) Handle(w http.ResponseWriter, r *http.Request, _ httprouter.
 }
 
 // ClientIP returns the client's IP address from the request headers or RemoteAddr.
-func ClientIP(r *http.Request) (string, error) {
+func ClientIP(r *http.Request, proxy string) (string, error) {
 	var (
 		headers = []string{
 			"CF-Connecting-IP",
@@ -105,7 +108,7 @@ func ClientIP(r *http.Request) (string, error) {
 			"X-Real-IP",
 			"X-Forwarded-For",
 		}
-		proxy = "127.0.0.1"
+		trustedProxy = proxy
 	)
 
 	// Check the remote IP. If it's not the trusted proxy, we can't trust the headers.
@@ -117,7 +120,7 @@ func ClientIP(r *http.Request) (string, error) {
 
 	remoteIP = strings.Trim(remoteIP, "[]")
 
-	if remoteIP != proxy {
+	if remoteIP != trustedProxy {
 		return remoteIP, nil
 	}
 

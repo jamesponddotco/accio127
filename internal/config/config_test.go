@@ -20,6 +20,11 @@ func TestLoadConfig(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name:    "invalid_config_missing_proxy",
+			path:    "testdata/invalid-missing-proxy-config.json",
+			wantErr: true,
+		},
+		{
 			name:    "invalid_config_missing_cert",
 			path:    "testdata/invalid-missing-cert-config.json",
 			wantErr: true,

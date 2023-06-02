@@ -56,9 +56,9 @@ func New(cfg *config.Config, db *database.DB, logger *zap.Logger) (*Server, erro
 	}
 
 	var (
-		ipHandler           = handler.NewIPHandler(db, logger)
-		anonymizedIPHandler = handler.NewAnonymizedIPHandler(db, logger)
-		hashedIPHandler     = handler.NewHashedIPHandler(db, logger)
+		ipHandler           = handler.NewIPHandler(cfg, db, logger)
+		anonymizedIPHandler = handler.NewAnonymizedIPHandler(cfg, db, logger)
+		hashedIPHandler     = handler.NewHashedIPHandler(cfg, db, logger)
 		metricsHandler      = handler.NewMetricsHandler(db, logger)
 		statusHandler       = handler.NewStatusHandler(db, logger)
 	)

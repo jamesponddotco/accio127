@@ -21,6 +21,10 @@ const (
 	// ErrInvalidPrivacyPolicy is returned when the privacy policy is invalid.
 	ErrInvalidPrivacyPolicy xerrors.Error = "invalid privacy policy"
 
+	// ErrProxyRequired is returned when a Config is created without the IP
+	// address of the reverse proxy.
+	ErrProxyRequired xerrors.Error = "reverse proxy IP address is required"
+
 	// ErrCertRequired is returned when a Config is created without
 	// certification files.
 	ErrCertRequired xerrors.Error = "certification files are required"
@@ -58,6 +62,9 @@ const (
 type Config struct {
 	// Address is the address of the application.
 	Address string `json:"address"`
+
+	// Proxy is the IP address of the trusted reverse proxy.
+	Proxy string `json:"proxy"`
 
 	// PID is the path to the process ID file.
 	PID string `json:"pid"`
@@ -142,6 +149,10 @@ func LoadConfig(path string) (*Config, error) {
 
 // Validate validates the configuration.
 func (cfg *Config) Validate() error {
+	if cfg.Proxy == "" {
+		return ErrProxyRequired
+	}
+
 	if cfg.CertFile == "" || cfg.CertKey == "" {
 		return ErrCertRequired
 	}

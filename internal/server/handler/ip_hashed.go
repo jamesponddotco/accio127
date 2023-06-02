@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"git.sr.ht/~jamesponddotco/accio127/internal/config"
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
 	"git.sr.ht/~jamesponddotco/accio127/internal/errors"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
@@ -15,13 +16,15 @@ import (
 
 // HashedIPHandler is an HTTP handler for the /ip/hashed endpoint.
 type HashedIPHandler struct {
+	cfg    *config.Config
 	db     *database.DB
 	logger *zap.Logger
 }
 
 // NewHashedIPHandler returns a new HashedIPHandler instance.
-func NewHashedIPHandler(db *database.DB, logger *zap.Logger) *HashedIPHandler {
+func NewHashedIPHandler(cfg *config.Config, db *database.DB, logger *zap.Logger) *HashedIPHandler {
 	return &HashedIPHandler{
+		cfg:    cfg,
 		db:     db,
 		logger: logger,
 	}
@@ -29,7 +32,7 @@ func NewHashedIPHandler(db *database.DB, logger *zap.Logger) *HashedIPHandler {
 
 // ServeHTTP serves the /ip/hashed endpoint.
 func (h *HashedIPHandler) Handle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	ip, err := ClientIP(r)
+	ip, err := ClientIP(r, h.cfg.Proxy)
 	if err != nil {
 		h.logger.Error("Failed to get client IP address", zap.Error(err))
 

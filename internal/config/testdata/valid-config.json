@@ -1,4 +1,5 @@
 {
+  "proxy": "127.0.0.1",
   "certFile": "/etc/nginx/ssl/example.com/cert.pem",
   "certKey": "/etc/nginx/ssl/example.com/key.pem",
   "privacyPolicy": "https://example.com/privacy-policy"
