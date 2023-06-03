@@ -21,4 +21,7 @@ const (
 
 	// Status is the endpoint for the Status handler.
 	Status string = Slash + build.APIVersion + "/status"
+
+	// Ping is the endpoint for the Heartbeat handler.
+	Ping string = Slash + build.APIVersion + "/ping"
 )
