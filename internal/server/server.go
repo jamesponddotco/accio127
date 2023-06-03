@@ -60,7 +60,7 @@ func New(cfg *config.Config, db *database.DB, logger *zap.Logger) (*Server, erro
 		anonymizedIPHandler = handler.NewAnonymizedIPHandler(cfg, db, logger)
 		hashedIPHandler     = handler.NewHashedIPHandler(cfg, db, logger)
 		metricsHandler      = handler.NewMetricsHandler(db, logger)
-		statusHandler       = handler.NewStatusHandler(db, logger)
+		healthHandler       = handler.NewHealthHandler(db, logger)
 		heartbeatHandler    = handler.NewHeartbeatHandler(logger)
 	)
 
@@ -76,7 +76,7 @@ func New(cfg *config.Config, db *database.DB, logger *zap.Logger) (*Server, erro
 	mux.GET(endpoint.IPAnonymize, middleware.Chain(anonymizedIPHandler.Handle, middlewares...))
 	mux.GET(endpoint.IPHashed, middleware.Chain(hashedIPHandler.Handle, middlewares...))
 	mux.GET(endpoint.Metrics, middleware.Chain(metricsHandler.Handle, middlewares...))
-	mux.GET(endpoint.Status, middleware.Chain(statusHandler.Handle, middlewares...))
+	mux.GET(endpoint.Health, middleware.Chain(healthHandler.Handle, middlewares...))
 	mux.GET(endpoint.Ping, middleware.Chain(heartbeatHandler.Handle, middlewares...))
 
 	httpServer := &http.Server{

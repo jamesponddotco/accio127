@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"git.sr.ht/~jamesponddotco/accio127/internal/build"
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
 	"git.sr.ht/~jamesponddotco/accio127/internal/errors"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
@@ -12,31 +13,29 @@ import (
 )
 
 const (
-	// Online is the status of a server that is online.
+	// Online is the status of a service that is online.
 	Online string = "Online"
 
-	// Offline is the status of a server that is offline.
+	// Offline is the status of a service that is offline.
 	Offline string = "Offline"
 )
 
-// StatusHandler is an HTTP handler for the /status endpoint.
-type StatusHandler struct {
+// HealthHandler is an HTTP handler for the /health endpoint.
+type HealthHandler struct {
 	db     *database.DB
 	logger *zap.Logger
 }
 
-// NewStatusHandler creates a new StatusHandler.
-func NewStatusHandler(db *database.DB, logger *zap.Logger) *StatusHandler {
-	return &StatusHandler{
+// NewHealthHandler creates a new HealthHandler instance.
+func NewHealthHandler(db *database.DB, logger *zap.Logger) *HealthHandler {
+	return &HealthHandler{
 		db:     db,
 		logger: logger,
 	}
 }
 
-// ServeHTTP serves the /status endpoint.
-func (h *StatusHandler) Handle(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
-	const serverStatus = Online
-
+// ServeHTTP serves the /health endpoint.
+func (h *HealthHandler) Handle(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
 	databaseStatus := Online
 
 	err := h.db.Ping()
@@ -46,7 +45,15 @@ func (h *StatusHandler) Handle(w http.ResponseWriter, _ *http.Request, _ httprou
 		h.logger.Warn("Database is offline", zap.Error(err))
 	}
 
-	status := model.NewStatus(serverStatus, databaseStatus)
+	var (
+		dependencies = []model.Dependency{
+			{
+				Service: "sqlite",
+				Status:  databaseStatus,
+			},
+		}
+		status = model.NewHealth(build.Name, build.Version, dependencies)
+	)
 
 	statusJSON, err := json.Marshal(status) //nolint:errchkjson // if we don't check here, another linter complains
 	if err != nil {

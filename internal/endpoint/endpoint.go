@@ -19,8 +19,8 @@ const (
 	// Metrics is the endpoint for the Metrics handler.
 	Metrics string = Slash + build.APIVersion + "/metrics"
 
-	// Status is the endpoint for the Status handler.
-	Status string = Slash + build.APIVersion + "/status"
+	// Health is the endpoint for the Health handler.
+	Health string = Slash + build.APIVersion + "/health"
 
 	// Ping is the endpoint for the Heartbeat handler.
 	Ping string = Slash + build.APIVersion + "/ping"
