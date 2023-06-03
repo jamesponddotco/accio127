@@ -3,7 +3,7 @@ module git.sr.ht/~jamesponddotco/accio127
 go 1.20
 
 require (
-	git.sr.ht/~jamesponddotco/xstd-go v0.0.0-20230518215256-ade97098475f
+	git.sr.ht/~jamesponddotco/xstd-go v0.0.0-20230602124145-693a263541a3
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/mattn/go-sqlite3 v1.14.16
 	github.com/spf13/cobra v1.7.0

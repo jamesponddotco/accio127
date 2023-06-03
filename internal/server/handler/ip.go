@@ -11,6 +11,7 @@ import (
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
 	"git.sr.ht/~jamesponddotco/accio127/internal/errors"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
+	"git.sr.ht/~jamesponddotco/xstd-go/xnet/xhttp"
 	"github.com/julienschmidt/httprouter"
 	"go.uber.org/zap"
 )
@@ -45,10 +46,10 @@ func (h *IPHandler) Handle(w http.ResponseWriter, r *http.Request, _ httprouter.
 		return
 	}
 
-	contentType := r.Header.Get("Content-Type")
+	contentType := r.Header.Get(xhttp.ContentType)
 
-	if contentType == "application/json" {
-		w.Header().Set("Content-Type", "application/json")
+	if contentType == xhttp.ApplicationJSON {
+		w.Header().Set(xhttp.ContentType, xhttp.ApplicationJSON)
 
 		ipModel := model.NewIP(ip)
 
@@ -76,7 +77,7 @@ func (h *IPHandler) Handle(w http.ResponseWriter, r *http.Request, _ httprouter.
 			return
 		}
 	} else {
-		w.Header().Set("Content-Type", "text/plain")
+		w.Header().Set(xhttp.ContentType, xhttp.TextPlain)
 
 		_, err := w.Write([]byte(ip))
 		if err != nil {

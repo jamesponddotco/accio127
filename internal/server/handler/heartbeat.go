@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"git.sr.ht/~jamesponddotco/accio127/internal/errors"
+	"git.sr.ht/~jamesponddotco/xstd-go/xnet/xhttp"
 	"github.com/julienschmidt/httprouter"
 	"go.uber.org/zap"
 )
@@ -22,7 +23,7 @@ func NewHeartbeatHandler(logger *zap.Logger) *HeartbeatHandler {
 
 // ServeHTTP serves the /heartbeat endpoint.
 func (h *HeartbeatHandler) Handle(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
-	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set(xhttp.ContentType, xhttp.TextPlain)
 
 	_, err := w.Write([]byte("pong"))
 	if err != nil {

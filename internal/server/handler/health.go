@@ -8,6 +8,7 @@ import (
 	"git.sr.ht/~jamesponddotco/accio127/internal/database"
 	"git.sr.ht/~jamesponddotco/accio127/internal/errors"
 	"git.sr.ht/~jamesponddotco/accio127/internal/server/model"
+	"git.sr.ht/~jamesponddotco/xstd-go/xnet/xhttp"
 	"github.com/julienschmidt/httprouter"
 	"go.uber.org/zap"
 )
@@ -67,7 +68,7 @@ func (h *HealthHandler) Handle(w http.ResponseWriter, _ *http.Request, _ httprou
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set(xhttp.ContentType, xhttp.ApplicationJSON)
 
 	_, err = w.Write(statusJSON)
 	if err != nil {
