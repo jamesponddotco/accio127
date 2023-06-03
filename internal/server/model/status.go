@@ -6,7 +6,7 @@ type Status struct {
 	Server string `json:"server"`
 
 	// Database is the database status.
-	Database string `json:"redis"`
+	Database string `json:"database"`
 }
 
 // NewStatus creates a new Status.
