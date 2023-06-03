@@ -14,7 +14,6 @@ enable = [
   "containedctx",
   "contextcheck",
   "durationcheck",
-  "durationcheck",
   "errcheck",
   "errchkjson",
   "errname",
