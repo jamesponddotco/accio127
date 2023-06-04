@@ -4,8 +4,8 @@ import "net"
 
 // Address represents an IP address.
 type IP struct {
-	V4 string `json:"ipv4"`
-	V6 string `json:"ipv6"`
+	V4 string `json:"ipv4,omitempty"`
+	V6 string `json:"ipv6,omitempty"`
 }
 
 // NewIP creates a new IP address.
