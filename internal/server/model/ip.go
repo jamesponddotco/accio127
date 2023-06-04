@@ -11,9 +11,6 @@ type IP struct {
 // NewIP creates a new IP address.
 func NewIP(ip string) *IP {
 	address := net.ParseIP(ip)
-	if address == nil {
-		return nil
-	}
 
 	var (
 		ipv4 = address.To4()
