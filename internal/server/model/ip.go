@@ -15,16 +15,22 @@ func NewIP(ip string) *IP {
 		return nil
 	}
 
-	switch len(address) {
-	case net.IPv4len:
+	var (
+		ipv4 = address.To4()
+		ipv6 = address.To16()
+	)
+
+	if ipv4 != nil {
 		return &IP{
-			V4: address.String(),
+			V4: ipv4.String(),
 		}
-	case net.IPv6len:
-		return &IP{
-			V6: address.String(),
-		}
-	default:
-		return nil
 	}
+
+	if ipv6 != nil {
+		return &IP{
+			V6: ipv6.String(),
+		}
+	}
+
+	return nil
 }
