@@ -1,0 +1,288 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Accio127",
+    "description": "A reliable, simple, and privacy-focused public IP address API.",
+    "version": "0.1.0",
+    "termsOfService": "http://accio127/terms/",
+    "contact": {
+      "name": "the maintainer",
+      "email": "ops@accio127.com"
+    },
+    "license": {
+      "name": "EUPL 1.2",
+      "url": "https://opensource.org/license/eupl-1-2/"
+    }
+  },
+  "externalDocs": {
+    "description": "Source code",
+    "url": "https://sr.ht/~jamesponddotco/accio127"
+  },
+  "servers": [
+    {
+      "url": "https://api.accio127.com/v1/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "IPs"
+    },
+    {
+      "name": "Health"
+    },
+    {
+      "name": "Metrics"
+    }
+  ],
+  "paths": {
+    "/ip": {
+      "get": {
+        "tags": [
+          "IPs"
+        ],
+        "summary": "Get your IP address",
+        "operationId": "getIPInfo",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved IP address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IP"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ip/anonymized": {
+      "get": {
+        "tags": [
+          "IPs"
+        ],
+        "summary": "Get your IP address anonymized",
+        "operationId": "getAnonymizedIPInfo",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved anonymized IP address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IP"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ip/hashed": {
+      "get": {
+        "tags": [
+          "IPs"
+        ],
+        "summary": "Get your IP address as a SHA256 hash",
+        "operationId": "getHashedIPInfo",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved hashed IP address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IP"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Get state of the server and its dependencies",
+        "operationId": "getServerStatus",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved server status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ping": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Ping the server for liveness",
+        "operationId": "getServerLiveness",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved server liveness status",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "example": "pong",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "summary": "Get the access counter",
+        "operationId": "getMetrics",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved access counter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Counter"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "IP": {
+        "type": "object",
+        "properties": {
+          "ipv4": {
+            "type": "string"
+          },
+          "ipv6": {
+            "type": "string"
+          }
+        }
+      },
+      "Dependency": {
+        "type": "object",
+        "properties": {
+          "service": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Dependency"
+            }
+          }
+        }
+      },
+      "Counter": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}
