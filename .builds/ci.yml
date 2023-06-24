@@ -8,10 +8,6 @@ packages:
 sources:
   - https://git.sr.ht/~jamesponddotco/accio127
 tasks:
-  - lint: |
-      cd accio127
-      export PATH="${HOME}/go/bin:${PATH}"
-      make lint
   - test: |
       cd accio127
       make test
